@@ -29,7 +29,6 @@ deploy-to-akash:
     WORKDIR /akash
     COPY deploy.yml .
     RUN sed -i 's/CHANGE_ME/'$COSMOS_CHAIN_DIRECTORY_VERSION'/' deploy.yml
-    RUN false
     ENV AKASH_HOME=/akash/.akash
     ENV AKASH_KEY_NAME=AKASH_EARTHLY
     RUN apt-get update -yq \
