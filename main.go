@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"io/fs"
 	"net/http"
+	"os"
 )
 
 //go:embed chain-registry
@@ -16,10 +17,16 @@ type AllChainsResponse struct {
 	Chains []string `json:"chains"`
 }
 
+type VersionsResponse struct {
+	CosmosChainDirectoryVersion string `json:"cosmosChainDirectoryVersion"`
+	ChainRegistryVersion        string `json:"chainRegistryVersion"`
+}
+
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", AllChainsHandler).Methods("GET")
-	r.HandleFunc("/{chain}", ChainHandler).Methods("GET")
+	r.HandleFunc("/chains/{chain}", ChainHandler).Methods("GET")
+	r.HandleFunc("/version", VersionsHandler).Methods("GET")
 
 	fmt.Println("Serving on port 8080")
 	err := http.ListenAndServe(":8080", r)
@@ -63,4 +70,14 @@ func ChainHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(chainInfo)
+}
+
+func VersionsHandler(w http.ResponseWriter, _ *http.Request) {
+	res := VersionsResponse{
+		CosmosChainDirectoryVersion: os.Getenv("COSMOS_CHAIN_DIRECTORY_VERSION"),
+		ChainRegistryVersion:        os.Getenv("CHAIN_REGISTRY_VERSION"),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
 }

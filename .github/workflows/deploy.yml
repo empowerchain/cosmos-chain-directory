@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
 
@@ -17,8 +17,15 @@ jobs:
         with:
           version: v0.6.13
 
+      - id: git-sha-short-cosmos-chain-directory
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - id: git-sha-short-chain-registry
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        working-directory: chain-registry
+
       - name: build
-        run: earthly +build
+        run: earthly +build --COSMOS_CHAIN_DIRECTORY_VERSION=${{ steps.git-sha-short-cosmos-chain-directory.outputs.sha_short }} --CHAIN_REGISTRY_VERSION=${{ steps.git-sha-short-chain-registry.outputs.sha_short }}
 
       - name: Log in to the Docker Hub
         uses: docker/login-action@v1
@@ -28,3 +35,19 @@ jobs:
 
       - name: build and push docker image
         run: earthly --push +docker
+
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: earthly/actions/setup-earthly@v1
+        with:
+          version: v0.6.13
+
+      - id: git-sha-short-cosmos-chain-directory
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: build and push docker image
+        run: earthly --secret GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" --secret AKASH_WALLET_KEY="${{ secrets.AKASH_WALLET_KEY }}" --secret AKASH_WALLET_KEY_PASSWORD="${{ secrets.AKASH_WALLET_KEY_PASSWORD }}" --secret AKASH_DEPLOY_CERTIFICATE="${{ secrets.AKASH_DEPLOY_CERTIFICATE }}" +deploy-to-akash --COSMOS_CHAIN_DIRECTORY_VERSION=${{ steps.git-sha-short-cosmos-chain-directory.outputs.sha_short }}

@@ -1,0 +1,38 @@
+---
+version: "2.0"
+
+services:
+  cosmos-chain-directory:
+    image: empowergjermund/cosmos-chain-directory:CHANGE_ME
+    expose:
+      - port: 8080
+        as: 80
+        accept:
+          - "cosmos-chain.directory"
+        to:
+          - global: true
+profiles:
+  compute:
+    cosmos-chain-directory:
+      resources:
+        cpu:
+          units: 0.5
+        memory:
+          size: 512Mb
+        storage:
+          size: 1Gi
+  placement:
+    akash:
+      signedBy:
+        anyOf:
+          - "akash1365yvmc4s7awdyj3n2sav7xfx76adc6dnmlx63"
+      pricing:
+        cosmos-chain-directory:
+          denom: uakt
+          amount: 100
+
+deployment:
+  cosmos-chain-directory:
+    akash:
+      profile: cosmos-chain-directory
+      count: 1
