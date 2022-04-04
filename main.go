@@ -63,7 +63,7 @@ func ChainHandler(w http.ResponseWriter, r *http.Request) {
 	chain := vars["chain"]
 
 	path := fmt.Sprintf("chain-registry/%s/chain.json", chain)
-	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+	if _, err := fs.Stat(chainRegistry, path); errors.Is(err, os.ErrNotExist) {
 		http.Error(w, fmt.Sprintf("%q does not exist in the chain registry", chain), http.StatusNotFound)
 		return
 	}
