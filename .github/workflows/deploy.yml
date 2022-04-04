@@ -1,0 +1,28 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: earthly/actions/setup-earthly@v1
+        with:
+          version: v0.6.13
+
+      - name: build
+        run: earthly +build
+
+      - name: Log in to the Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: build and push docker image
+        run: earthly --push +docker

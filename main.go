@@ -21,7 +21,11 @@ func main() {
 	r.HandleFunc("/", AllChainsHandler).Methods("GET")
 	r.HandleFunc("/{chain}", ChainHandler).Methods("GET")
 
-	http.ListenAndServe(":8080", r)
+	fmt.Println("Serving on port 8080")
+	err := http.ListenAndServe(":8080", r)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func AllChainsHandler(w http.ResponseWriter, _ *http.Request) {
