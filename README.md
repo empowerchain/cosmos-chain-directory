@@ -13,7 +13,7 @@ The API is hosted on https://cosmos-chain.directory (With Akash, see deployment 
 
 ### Example outputs:
 
-https://cosmos-chain.directory/chains/
+https://cosmos-chain.directory/chains
 ```json
 {
     "chains": ["agoric","akash","arkh", "etc"]
