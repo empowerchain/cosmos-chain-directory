@@ -25,6 +25,8 @@ docker:
 
 deploy-to-akash:
     ARG COSMOS_CHAIN_DIRECTORY_VERSION
+    ARG AKASH_DSEQ
+    ARG AKASH_PROVIDER
     FROM ubuntu:20.04
     WORKDIR /akash
     COPY deploy.yml .
@@ -43,6 +45,6 @@ deploy-to-akash:
         && AKASH_CHAIN_ID="$(curl -s "https://raw.githubusercontent.com/ovrclk/net/master/mainnet/chain-id.txt")" \
         && AKASH_NODE=https://rpc.akash.forbole.com:443 \
         && echo $AKASH_VERSION $AKASH_NODE $AKASH_CHAIN_ID \
-        && akash tx deployment update deploy.yml -y --dseq 5342523 --from $AKASH_KEY_NAME --keyring-backend test --chain-id $AKASH_CHAIN_ID --node $AKASH_NODE --gas-prices="0.025uakt" --gas="auto" --gas-adjustment=1.5 \
+        && akash tx deployment update deploy.yml -y --dseq $AKASH_DSEQ --from $AKASH_KEY_NAME --keyring-backend test --chain-id $AKASH_CHAIN_ID --node $AKASH_NODE --gas-prices="0.025uakt" --gas="auto" --gas-adjustment=1.5 \
         && sleep 30 \ # TODO: Do something smarter than this plz
-        && akash provider send-manifest deploy.yml --node $AKASH_NODE --dseq 5342523 --provider akash1u5cdg7k3gl43mukca4aeultuz8x2j68mgwn28e --home $AKASH_HOME --from $AKASH_KEY_NAME --keyring-backend test
+        && akash provider send-manifest deploy.yml --node $AKASH_NODE --dseq $AKASH_DSEQ --provider $AKASH_PROVIDER --home $AKASH_HOME --from $AKASH_KEY_NAME --keyring-backend test

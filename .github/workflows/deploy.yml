@@ -50,4 +50,4 @@ jobs:
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: deploy
-        run: earthly --ci --secret GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" --secret AKASH_WALLET_KEY="${{ secrets.AKASH_WALLET_KEY }}" --secret AKASH_WALLET_KEY_PASSWORD="${{ secrets.AKASH_WALLET_KEY_PASSWORD }}" --secret AKASH_DEPLOY_CERTIFICATE="${{ secrets.AKASH_DEPLOY_CERTIFICATE }}" +deploy-to-akash --COSMOS_CHAIN_DIRECTORY_VERSION=${{ steps.git-sha-short-cosmos-chain-directory.outputs.sha_short }}
+        run: earthly --ci --secret GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" --secret AKASH_WALLET_KEY="${{ secrets.AKASH_WALLET_KEY }}" --secret AKASH_WALLET_KEY_PASSWORD="${{ secrets.AKASH_WALLET_KEY_PASSWORD }}" --secret AKASH_DEPLOY_CERTIFICATE="${{ secrets.AKASH_DEPLOY_CERTIFICATE }}" +deploy-to-akash --AKASH_DSEQ=${{ secrets.AKASH_DSEQ }} --AKASH_PROVIDER=${{ secrets.AKASH_PROVIDER }} --COSMOS_CHAIN_DIRECTORY_VERSION=${{ steps.git-sha-short-cosmos-chain-directory.outputs.sha_short }}
