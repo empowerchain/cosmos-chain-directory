@@ -24,7 +24,7 @@ type VersionsResponse struct {
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/", AllChainsHandler).Methods("GET")
+	r.HandleFunc("/chains", AllChainsHandler).Methods("GET")
 	r.HandleFunc("/chains/{chain}", ChainHandler).Methods("GET")
 	r.HandleFunc("/version", VersionsHandler).Methods("GET")
 
