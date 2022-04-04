@@ -41,7 +41,7 @@ deploy-to-akash:
     RUN --secret AKASH_DEPLOY_CERTIFICATE echo "$AKASH_DEPLOY_CERTIFICATE" > $AKASH_HOME/$(akash keys show $AKASH_KEY_NAME --keyring-backend test --output=json | jq -r ".address").pem
     RUN AKASH_VERSION="$(curl -s "https://raw.githubusercontent.com/ovrclk/net/master/mainnet/version.txt")" \
         && AKASH_CHAIN_ID="$(curl -s "https://raw.githubusercontent.com/ovrclk/net/master/mainnet/chain-id.txt")" \
-        && AKASH_NODE="$(curl -s "https://raw.githubusercontent.com/ovrclk/net/master/mainnet/rpc-nodes.txt" | shuf -n 1)" \
+        && AKASH_NODE=https://rpc.akash.forbole.com:443 \
         && echo $AKASH_VERSION $AKASH_NODE $AKASH_CHAIN_ID \
-        && akash tx deployment update deploy.yml --dseq 5342523 --from $AKASH_KEY_NAME --chain-id $AKASH_CHAIN_ID --node $AKASH_NODE --gas-prices="0.025uakt" --gas="auto" --gas-adjustment=1.15 \
-        && akash provider send-manifest deploy.yml --node $AKASH_NODE --dseq 5342523 --provider akash1u5cdg7k3gl43mukca4aeultuz8x2j68mgwn28e --home $AKASH_HOME --from $AKASH_KEY_NAME
+        && akash tx deployment update deploy.yml -y --dseq 5342523 --from $AKASH_KEY_NAME --keyring-backend test --chain-id $AKASH_CHAIN_ID --node $AKASH_NODE --gas-prices="0.025uakt" --gas="auto" --gas-adjustment=1.15 \
+        && akash provider send-manifest deploy.yml --node $AKASH_NODE --dseq 5342523 --provider akash1u5cdg7k3gl43mukca4aeultuz8x2j68mgwn28e --home $AKASH_HOME --from $AKASH_KEY_NAME --keyring-backend test
