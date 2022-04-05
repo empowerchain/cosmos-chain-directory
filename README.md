@@ -7,8 +7,8 @@ This is a simple http server that exposes a simple API to the Cosmos Chain Regis
 The API is hosted on https://cosmos-chain.directory (With Akash, see deployment workflow and Earthfile if interested)
 
 ### Endpoints
-- GET https://cosmos-chain.directory/chains/ (list of all registered chains in the directory)
-- GET https://cosmos-chain.directory/chains/{chainName}/ (specific chain info)
+- GET https://cosmos-chain.directory/chains (list of all registered chains in the directory)
+- GET https://cosmos-chain.directory/chains/{chainName} (specific chain info)
 - GET https://cosmos-chain.directory/version (version of the api + version of the registry (in the form of git hash))
 
 ### Example outputs:
